@@ -4,7 +4,7 @@
 
 #include "commands.hxx"
 
-#define VERSION    "1.0.0"
+#define VERSION    "1.1.0"
 #define ANSI_BOLD  "\033[1m"
 #define ANSI_RESET "\033[0m"
 
@@ -37,6 +37,9 @@ ANSI_RESET
 "                                                                              \n"
 "    -h, --help                                                                \n"
 "        Prints the program help message and exit.                             \n"
+"                                                                              \n"
+"    --no-color                                                                \n"
+"        Disable colorized output.                                             \n"
 "                                                                              \n"
 ANSI_BOLD
 "COMMANDS                                                                      \n"
@@ -99,6 +102,8 @@ namespace utils {
                     || option == "--help") {
                 show_help();
                 exit(0);
+            } else if (option == "--no-color") {
+                env.colorized = false;
             } else if (option[0] == '-') {
                 throw std::invalid_argument(
                         std::format(

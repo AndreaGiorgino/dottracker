@@ -7,6 +7,12 @@
 
 #include "parser.hxx"
 
+#define ANSI_BOLD   "\033[1m"
+#define ANSI_RESET  "\033[0m"
+#define ANSI_RED    "\033[91m"
+#define ANSI_GREEN  "\033[92m"
+#define ANSI_YELLOW "\033[93m"
+
 namespace fs = std::filesystem;
 
 auto get_repo_files_path(const enviroment& env) -> fs::path {
@@ -100,7 +106,8 @@ namespace commands {
 
         parser p { get_config_file_path(env).string() };
 
-        std::println("{:22} | {:22} | status", "filename", "hash");
+        std::println("{:30} | {:28} | {}", ANSI_BOLD "Filename" ANSI_RESET,
+                ANSI_BOLD "Hash" ANSI_RESET, ANSI_BOLD "Status" ANSI_RESET);
         for (const auto& filePath : p.lines()) {
             const std::string parentPath { fs::path { filePath }.parent_path() };
             const std::string filename { fs::path { filePath }.filename() };
@@ -111,13 +118,17 @@ namespace commands {
 
             const auto repoFilePath { repoFilesPath / hash };
 
-            std::print("[{:20}] | [{}] | ", filename, hash);
+            std::print("[{:20}] | {} | ", filename, hash);
 
             if (!fs::exists(repoFilePath)) {
-                std::println("A");
+                if (env.colorized)
+                    std::print(ANSI_YELLOW);
+                std::println(ANSI_BOLD "A" ANSI_RESET);
                 continue;
             } else if (!fs::exists(filePath)) {
-                std::println("D");
+                if (env.colorized)
+                    std::print(ANSI_RED);
+                std::println(ANSI_BOLD "D" ANSI_RESET);
                 continue;
             }
 
@@ -137,18 +148,27 @@ namespace commands {
             }
 
             // size mismatch
-            if (localStream.tellg() != repoStream.tellg()) {
-                std::println("M");
+            if (fs::file_size(fs::path { filePath })
+                    != fs::file_size(repoFilePath)) {
+                if (env.colorized)
+                    std::print(ANSI_YELLOW);
+                std::println(ANSI_BOLD "M" ANSI_RESET);
                 continue;
             }
 
-            localStream.seekg(0, std::ifstream::beg);
-            repoStream.seekg(0, std::ifstream::beg);
-            if (std::equal(std::istreambuf_iterator<char>(localStream.rdbuf()),
-                    std::istreambuf_iterator<char>(),
-                    std::istreambuf_iterator<char>(repoStream.rdbuf())))
-                std::println("OK");
-            else std::println("M");
+            if (std::equal(
+                        std::istreambuf_iterator<char>(localStream.rdbuf()),
+                        std::istreambuf_iterator<char>(),
+                        std::istreambuf_iterator<char>(repoStream.rdbuf())
+                    )) {
+                if (env.colorized)
+                    std::print(ANSI_GREEN);
+                std::println(ANSI_BOLD "OK" ANSI_RESET);
+            } else {
+                if (env.colorized)
+                    std::print(ANSI_YELLOW);
+                std::println(ANSI_BOLD "M" ANSI_RESET);
+            }
         }
     }
 } // namespace commands

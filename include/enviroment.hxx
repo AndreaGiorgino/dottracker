@@ -6,4 +6,5 @@ struct enviroment final {
     std::string command {};
     std::string target  {};
     std::string sourcePath {};
+    bool colorized { true };
 };
