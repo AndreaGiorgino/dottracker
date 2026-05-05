@@ -1,15 +1,18 @@
+#include <filesystem>
 #include <print>
 
 #include "commands.hxx"
+#include "version.hxx"
 #include "utils/args.hxx"
 #include "utils/error.hxx"
 
-#define VERSION    "1.1.1"
 #define ANSI_BOLD  "\033[1m"
 #define ANSI_RESET "\033[0m"
 
+namespace fs = std::filesystem;
+
 auto show_version(void) noexcept -> void {
-    std::println("dottracker version {}", VERSION);
+    std::println("dottracker version {}", PROJECT_VERSION);
 }
 
 auto show_help(void) noexcept -> void {
@@ -73,7 +76,11 @@ ANSI_RESET
 
 namespace utils {
     auto parse_args(enviroment& env, int argc, char** argv) -> void {
-        env.program = *argv;
+        env.program = [&](void) -> fs::path {
+            if (fs::is_symlink(*argv))
+                return fs::read_symlink(*argv);
+            else return fs::absolute(*argv);
+        }();
 
         if (argc == 1) {
             show_help();
@@ -133,8 +140,8 @@ namespace utils {
                     continue;
                 else if (option == "-s"
                         || option == "--source") {
-                    env.sourcePath = arg_next();
-                    if (env.sourcePath.empty())
+                    env.sourcePath = fs::absolute(arg_next());
+                    if (env.sourcePath.string().empty())
                         throw utils::argument_error(
                                 std::format(
                                     "Command {:?}: missing required value for option: {:?}.",
@@ -154,8 +161,8 @@ namespace utils {
                     continue;
                 else if (option == "-s"
                         || option == "--source") {
-                    env.sourcePath = arg_next();
-                    if (env.sourcePath.empty())
+                    env.sourcePath = fs::absolute(arg_next());
+                    if (env.sourcePath.string().empty())
                         throw utils::argument_error(
                                 std::format(
                                     "Command {:?}: missing required value for option: {:?}.",

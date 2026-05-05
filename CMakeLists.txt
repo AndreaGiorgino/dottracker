@@ -8,6 +8,29 @@ project(dottracker
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+execute_process(
+    COMMAND bash -c "echo $HOME"
+    OUTPUT_VARIABLE USER_HOME
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if (${USER_HOME} STREQUAL "")
+    message(FATAL_ERROR "Cannot get \$HOME enviroment variable")
+endif()
+
+set(CONFIG_DIR ${USER_HOME}/.config/dottracker)
+
+message(STATUS "Initializing the configuration directory: [${CONFIG_DIR}]")
+file(MAKE_DIRECTORY ${CONFIG_DIR})
+
+
+message(STATUS "Creating symlink to the configuration file: ")
+execute_process(
+    COMMAND ln -fs ${CMAKE_CURRENT_SOURCE_DIR}/files.conf ${CONFIG_DIR})
+
+message(STATUS "Creating symlink to the tracked files directory: [${CONFIG_DIR}/files]")
+execute_process(
+    COMMAND ln -fs ${CMAKE_CURRENT_SOURCE_DIR}/files ${CONFIG_DIR})
+
 # Configure files
 
 configure_file(
@@ -30,20 +53,3 @@ target_include_directories(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated)
-
-# Create symlink for tracked files in build directory
-
-if(WIN32)
-    get_filename_component(REAL_PATH
-        ${CMAKE_CURRENT_SOURCE_DIR}/files REALPATH)
-    string(REPLACE "/" "\\"
-        TARGET_PATH
-        ${REAL_PATH})
-
-    execute_process(
-        COMMAND cmd /C mklink /J files ${TARGET_PATH}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-else()
-    execute_process(
-        COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/files ${CMAKE_CURRENT_BINARY_DIR}/files)
-endif()

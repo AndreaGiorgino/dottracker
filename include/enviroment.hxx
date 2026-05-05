@@ -1,10 +1,11 @@
 #pragma once
+#include <filesystem>
 #include <string>
 
 struct enviroment final {
-    std::string program {};
+    std::filesystem::path program {};
     std::string command {};
     std::string target  {};
-    std::string sourcePath {};
+    std::filesystem::path sourcePath {};
     bool colorized { true };
 };

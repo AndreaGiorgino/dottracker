@@ -15,14 +15,8 @@
 
 namespace fs = std::filesystem;
 
-auto get_repo_files_path(const enviroment& env) -> fs::path {
-    return {
-        fs::absolute(env.program).parent_path() / "files"
-    };
-}
-
 auto get_config_file_path(const enviroment& env) -> fs::path {
-    if (env.sourcePath.empty()) {
+    if (env.sourcePath.string().empty()) {
         const auto homePathStr { std::getenv("HOME") };
         if (!homePathStr)
             throw utils::system_error(
@@ -35,14 +29,18 @@ auto get_config_file_path(const enviroment& env) -> fs::path {
     } else return env.sourcePath;
 }
 
+auto get_tracked_files_path(const enviroment& env) -> fs::path {
+    return { get_config_file_path(env).parent_path() / "files" };
+}
+
 namespace commands {
     auto update(const enviroment& env) -> void {
-        const auto repoFilesPath = get_repo_files_path(env);
-        if (!fs::exists(repoFilesPath))
+        const auto trackedFilesPath = get_tracked_files_path(env);
+        if (!fs::exists(trackedFilesPath))
             throw utils::command_error(
                     std::format(
                         "Command {:?}: cannot find repository files directory: [{}].",
-                        env.command, repoFilesPath.string()));
+                        env.command, trackedFilesPath.string()));
 
         parser p { get_config_file_path(env).string() };
         for (const auto& filePath : p.lines()) {
@@ -53,13 +51,13 @@ namespace commands {
                 std::format("{:0>20}", std::hash<std::string> {}(filePath))
             };
 
-            const auto repoFilePath { repoFilesPath / hash };
+            const auto trackedFilePath { trackedFilesPath / hash };
 
             if (env.target == "local") {
-                if (!fs::exists(repoFilePath)) {
+                if (!fs::exists(trackedFilePath)) {
                     std::println(std::cerr,
                             "-- Cannot find repository file: [{}] [{}].",
-                            hash, repoFilePath.string());
+                            hash, trackedFilePath.string());
                     continue;
                 }
 
@@ -73,8 +71,8 @@ namespace commands {
 
                 std::println(std::clog,
                         "-- Updating local file: [{:20}] [{}].", filename,
-                        repoFilePath.string());
-                fs::copy(repoFilePath, filePath,
+                        trackedFilePath.string());
+                fs::copy(trackedFilePath, filePath,
                         fs::copy_options::overwrite_existing);
             } else if (env.target == "repo") {
                 if (!fs::exists(filePath)) {
@@ -86,8 +84,8 @@ namespace commands {
 
                 std::println(std::clog,
                         "-- Updating repository file: [{:20}] [{}].", hash,
-                        repoFilePath.string());
-                fs::copy(filePath, repoFilePath,
+                        trackedFilePath.string());
+                fs::copy(filePath, trackedFilePath,
                         fs::copy_options::overwrite_existing);
             } else throw utils::command_error(
                     std::format(
@@ -97,12 +95,12 @@ namespace commands {
     }
 
     auto diff(const enviroment& env) -> void {
-        const auto repoFilesPath = get_repo_files_path(env);
-        if (!fs::exists(repoFilesPath))
+        const auto trackedFilesPath = get_tracked_files_path(env);
+        if (!fs::exists(trackedFilesPath))
             throw utils::command_error(
                     std::format(
                         "Command {:?}: cannot find repository files directory: [{}].",
-                        env.command, repoFilesPath.string()));
+                        env.command, trackedFilesPath.string()));
 
         parser p { get_config_file_path(env).string() };
 
@@ -116,12 +114,12 @@ namespace commands {
                 std::format("{:0>20}", std::hash<std::string> {}(filePath))
             };
 
-            const auto repoFilePath { repoFilesPath / hash };
+            const auto trackedFilePath { trackedFilesPath / hash };
 
             std::print("[{:20}] | {} | ", filename, hash);
 
             // check if file is missing
-            if (!fs::exists(repoFilePath)) {
+            if (!fs::exists(trackedFilePath)) {
                 if (env.colorized)
                     std::print(ANSI_YELLOW);
                 std::println(ANSI_BOLD "A" ANSI_RESET);
@@ -133,25 +131,25 @@ namespace commands {
                 continue;
             }
 
-            std::ifstream localStream { filePath };
-            if (!localStream) {
+            std::ifstream localFileStreamIn { filePath };
+            if (!localFileStreamIn) {
                 std::println(std::cerr,
                         "-- Cannot open local file: [{}].",
                         filePath);
                 continue;
             }
 
-            std::ifstream repoStream { repoFilePath.string() };
-            if (!repoStream) {
+            std::ifstream trackedFileStreamIn { trackedFilePath.string() };
+            if (!trackedFileStreamIn) {
                 std::println(std::cerr,
                         "-- Cannot open repository file: [{}].",
-                        repoFilePath.string());
+                        trackedFilePath.string());
                 continue;
             }
 
             // check for size mismatch
             if (fs::file_size(fs::path { filePath })
-                    != fs::file_size(repoFilePath)) {
+                    != fs::file_size(trackedFilePath)) {
                 if (env.colorized)
                     std::print(ANSI_YELLOW);
                 std::println(ANSI_BOLD "M" ANSI_RESET);
@@ -160,9 +158,9 @@ namespace commands {
 
             // check for content mismatch
             if (std::equal(
-                        std::istreambuf_iterator<char>(localStream.rdbuf()),
+                        std::istreambuf_iterator<char>(localFileStreamIn.rdbuf()),
                         std::istreambuf_iterator<char>(),
-                        std::istreambuf_iterator<char>(repoStream.rdbuf())
+                        std::istreambuf_iterator<char>(trackedFileStreamIn.rdbuf())
                     )) {
                 if (env.colorized)
                     std::print(ANSI_GREEN);
