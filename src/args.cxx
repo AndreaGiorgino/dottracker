@@ -62,9 +62,9 @@ ANSI_RESET
 "    diff [<-s | --source> <file_path>]                                        \n"
 "        Print a diff of the tracked files:                                    \n"
 "            - OK: local and repository file are in sync.                      \n"
-"            - A: local file has been added                                    \n"
-"            - M: local file has been modified                                 \n"
-"            - D: local file has been deleted                                  \n"
+"            - A:  local file has been added                                   \n"
+"            - M:  local file has been modified                                \n"
+"            - D:  local file has been deleted                                 \n"
 "                                                                              \n"
 ANSI_BOLD
 "        Options:                                                              \n"
