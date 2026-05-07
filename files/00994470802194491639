@@ -1,0 +1,8 @@
+return {
+    "olimorris/onedarkpro.nvim",
+    "nyoom-engineering/nyoom.nvim",
+    priority = 1000,
+    config = function()
+        vim.cmd("colorscheme nyoom")
+    end
+}

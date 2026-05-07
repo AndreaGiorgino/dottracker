@@ -105,7 +105,8 @@ namespace commands {
         parser p { get_config_file_path(env).string() };
 
         std::println("{:30} | {:28} | {}", ANSI_BOLD "Filename" ANSI_RESET,
-                ANSI_BOLD "Hash" ANSI_RESET, ANSI_BOLD "Status" ANSI_RESET);
+                ANSI_BOLD "Hash" ANSI_RESET,
+                ANSI_BOLD "Status (local)" ANSI_RESET);
         for (const auto& filePath : p.lines()) {
             const std::string parentPath { fs::path { filePath }.parent_path() };
             const std::string filename { fs::path { filePath }.filename() };
