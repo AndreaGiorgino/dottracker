@@ -12,6 +12,8 @@ return {
             }
         }
 
-        treesitter.install { "cpp" }
+        treesitter.install {
+            "c", "cpp", "lua", "bash", "regex"
+        }
     end
 }
