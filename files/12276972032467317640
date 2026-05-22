@@ -10,9 +10,13 @@ vim.keymap.set("n", "<C-t>", ":terminal<cr>i")
 --
 
 vim.keymap.set("n", "T", "<cmd>tabnew<cr>")
+vim.keymap.set("t", "<C-Tab>", "<C-\\><C-n>g<Tab>")
 
-vim.keymap.set({ "n", "t" }, "<C-Tab>",   "<cmd>tabnext<cr>")
-vim.keymap.set({ "n", "t" }, "<C-S-Tab>", "<cmd>tabprev<cr>")
+--
+-- terminal
+--
+
+vim.keymap.set("t", "<C-Esc>", "<C-\\><C-n>")
 
 --
 -- insert mode autocomplete
