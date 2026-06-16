@@ -46,6 +46,9 @@ vim.opt.hlsearch   = true
 vim.opt.ignorecase = true
 vim.opt.incsearch  = true
 
+vim.opt.foldmethod     = "indent"
+vim.opt.foldlevelstart = 99
+
 --
 -- swap and undo
 --
