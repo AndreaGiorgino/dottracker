@@ -10,12 +10,14 @@ return {
                 lenght = 1
             }
         end)
+
         vim.keymap.set("x", "<leader>as", function()
             align.align_to_string {
                 preview = true,
                 regex = false
             }
         end)
+
         vim.keymap.set("x", "<leader>ar", function()
             align.align_to_string {
                 preview = true,

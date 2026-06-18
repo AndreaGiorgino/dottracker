@@ -35,6 +35,8 @@ return {
             end
         end)
 
+        vim.keymap.set('n', '<leader>fd', builtin.lsp_definitions)
+
         pcall(telescope.load_extension, "fzf")
     end
 }
