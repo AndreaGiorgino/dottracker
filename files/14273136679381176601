@@ -44,7 +44,7 @@ export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p
 alias gits='nvim -c Neogit'
 alias gitu='git fetch && git pull'
 
-eval $(ssh-agent -s && ssh-add ~/.ssh/git)
+alias gitssh='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/git'
 
 # tree
 
