@@ -2,21 +2,21 @@
 -- buffers
 --
 
-vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>")
-vim.keymap.set("n", "<C-t>", ":terminal<cr>i")
+vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Writes to the current buffer." })
+vim.keymap.set("n", "<C-t>", ":terminal<cr>i", { desc = "Open a terminal window in the current buffer." })
 
 --
 -- tabs
 --
 
-vim.keymap.set("n", "T", "<cmd>tabnew<cr>")
-vim.keymap.set("t", "<C-Tab>", "<C-\\><C-n>g<Tab>")
+vim.keymap.set("n", "T", "<cmd>tabnew<cr>", { desc = "Open a new tab." })
+vim.keymap.set("t", "<C-Tab>", "<C-\\><C-n>g<Tab>", { desc = "Switch to the previews tab." })
 
 --
 -- terminal
 --
 
-vim.keymap.set("t", "<C-Esc>", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-Esc>", "<C-\\><C-n>", { desc = "Exit insert mode." })
 
 --
 -- insert mode autocomplete
@@ -28,7 +28,10 @@ vim.keymap.set("i", "<Tab>", function()
         else return "<Tab>"
         end
     end,
-    { expr = true }
+    {
+        desc = "Jump to the next suggestion.",
+        expr = true
+    }
 )
 
 vim.keymap.set("i", "<S-Tab>", function()
@@ -37,11 +40,15 @@ vim.keymap.set("i", "<S-Tab>", function()
         else return "<S-Tab>"
         end
     end,
-    { expr = true }
+    {
+        desc = "Jump to the previews suggestion.",
+        expr = true
+    }
 )
 
 --
 -- other mappings
 --
 
-vim.keymap.set("x", "<leader>s", ":sort<cr>")
+vim.keymap.set("x", "<leader>s", ":sort<cr>", { desc = "Sort lines alphabetically." })
+vim.keymap.set("n", "L", vim.diagnostic.open_float, { desc = "Show diagnostics." })
