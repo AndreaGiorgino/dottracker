@@ -31,7 +31,16 @@ set(CONFIG_DIR ${USER_HOME}/.config/dottracker)
 # Dependencies
 #
 
+include(FetchContent)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Options.cmake)
+
+FetchContent_Declare(
+    tokenizer
+    GIT_REPOSITORY git@github.com:AndreaGiorgino/libtokenizer
+    GIT_TAG 1.0.0
+)
+
+FetchContent_MakeAvailable(tokenizer)
 
 #
 # CMake generated files
@@ -75,6 +84,11 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
         $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE tokenizer
 )
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PostBuild.cmake)
