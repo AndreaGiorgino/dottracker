@@ -1,17 +1,25 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.24)
 
-project(dottracker
-    VERSION 1.2.0
+project(
+    dottracker
+    VERSION 1.3.0
     LANGUAGES CXX
 )
 
+#
+# Variables
+#
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE Realease)
+set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 execute_process(
     COMMAND bash -c "echo $HOME"
     OUTPUT_VARIABLE USER_HOME
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 if (${USER_HOME} STREQUAL "")
     message(FATAL_ERROR "Cannot get \$HOME enviroment variable")
@@ -19,37 +27,54 @@ endif()
 
 set(CONFIG_DIR ${USER_HOME}/.config/dottracker)
 
-message(STATUS "Initializing the configuration directory: [${CONFIG_DIR}]")
-file(MAKE_DIRECTORY ${CONFIG_DIR})
+#
+# Dependencies
+#
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Options.cmake)
 
-message(STATUS "Creating symlink to the configuration file: ")
-execute_process(
-    COMMAND ln -fs ${CMAKE_CURRENT_SOURCE_DIR}/files.conf ${CONFIG_DIR})
-
-message(STATUS "Creating symlink to the tracked files directory: [${CONFIG_DIR}/files]")
-execute_process(
-    COMMAND ln -fs ${CMAKE_CURRENT_SOURCE_DIR}/files ${CONFIG_DIR})
-
-# Configure files
+#
+# CMake generated files
+#
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/version.hxx.in
     ${CMAKE_CURRENT_BINARY_DIR}/generated/version.hxx
     @ONLY)
 
-# Target executable
+#
+# Target
+#
 
-file(GLOB_RECURSE SOURCE_FILES
-    CONFIGURE_DEPENDS src/*.cxx)
+file(
+    GLOB_RECURSE SOURCE_FILES
+    CONFIGURE_DEPENDS src/*.cxx
+)
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_executable(
+    ${PROJECT_NAME}
+    ${SOURCE_FILES}
+)
 
-target_compile_options(${PROJECT_NAME}
-    PRIVATE -Wall -Wextra -pedantic)
+set_target_properties(
+    ${PROJECT_NAME}
+    PROPERTIES
+        CXX_STANDARD 23
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+)
 
-target_include_directories(${PROJECT_NAME}
-    PRIVATE include)
+target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE -Wall -Wextra -pedantic
+)
 
-target_include_directories(${PROJECT_NAME}
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated)
+target_include_directories(
+    ${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
+        $<INSTALL_INTERFACE:include>
+)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PostBuild.cmake)
