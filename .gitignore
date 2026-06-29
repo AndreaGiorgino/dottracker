@@ -1,2 +1,4 @@
 build/*
-files/files
+files/*
+.cache/*
+Session.vim
