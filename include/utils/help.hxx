@@ -1,7 +1,6 @@
 #pragma once
 
-#define ANSI_BOLD  "\033[1m"
-#define ANSI_RESET "\033[0m"
+#include "globals.hxx"
 
 static constexpr auto helpMessage {
     ANSI_BOLD
@@ -65,5 +64,5 @@ static constexpr auto helpMessage {
     ANSI_RESET
     "            -s, --source <file_path>                                       \n"
     "                If specified, use the file provided for the update,        \n"
-    "                otherwise DOTTRACKER_CONFIG is used.                       \n"
+    "                otherwise DOTTRACKER_CONFIG is used."
 };

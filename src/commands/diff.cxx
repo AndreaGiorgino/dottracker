@@ -2,9 +2,10 @@
 
 #include <iostream>
 
-#include "filediff.hxx"
-#include "filehash.hxx"
+#include "globals.hxx"
 #include "libtokenizer/tokenizer.hxx"
+#include "utils/file/filediff.hxx"
+#include "utils/file/filehash.hxx"
 
 using tokenizer = libtokenizer::tokenizer;
 
@@ -60,35 +61,19 @@ auto diff(std::string_view source) -> int {
             std::format("{:20} [hash: {}]", filename, hash)};
 
         if (!std::filesystem::exists(filepath))
-            std::println(std::cout,
-                "\033[1m"
-                "❌ Deleted"
-                "\033[0m"
-                " -> {}",
+            std::println(std::cout, ANSI_BOLD "❌ Deleted" ANSI_RESET " -> {}",
                 filename);
         else if (!std::filesystem::is_regular_file(filepath)) {
             std::println(std::cerr, "❌ Not a file: {:?}", filepath);
             return;
         } else if (!std::filesystem::exists(hashFilepath))
-            std::println(std::cout,
-                "\033[1m"
-                "➕ Added  "
-                "\033[0m"
-                " -> {}",
+            std::println(std::cout, ANSI_BOLD "➕ Added  " ANSI_RESET " -> {}",
                 filenameReport);
         else if (filediff(filepath, hashFilepath))
-            std::println(std::cout,
-                "\033[1m"
-                "✅ Ok     "
-                "\033[0m"
-                " -> {}",
+            std::println(std::cout, ANSI_BOLD "✅ Synced " ANSI_RESET " -> {}",
                 filenameReport);
         else
-            std::println(std::cout,
-                "\033[1m"
-                "🔃 Sync   "
-                "\033[0m"
-                " -> {}",
+            std::println(std::cout, ANSI_BOLD "🔃 Updated" ANSI_RESET " -> {}",
                 filenameReport);
     }};
 
@@ -177,6 +162,5 @@ auto diff(std::string_view source) -> int {
         return 1;
     }
 
-    std::println(std::cerr, "function \"diff\" not implemented yet");
-    return 1;
+    return 0;
 }

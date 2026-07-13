@@ -3,7 +3,7 @@
 #include <print>
 
 #include "commands/diff.hxx"
-#include "help.hxx"
+#include "utils/help.hxx"
 #include "version.hxx"
 
 /**
@@ -100,8 +100,8 @@ auto main(int argc, char** argv) -> int {
                 } else
                     source = get_arg(++i);
             } else {
-                std::println(std::cerr, "❌ Unknow option {:?} for command {:?}.",
-                    arg, command);
+                std::println(std::cerr,
+                    "❌ Unknow option {:?} for command {:?}.", arg, command);
                 print_help();
                 return 1;
             }
@@ -124,8 +124,8 @@ auto main(int argc, char** argv) -> int {
                 } else
                     source = get_arg(++i);
             } else if (*arg.begin() == '-') {
-                std::println(std::cerr, "❌ Unknow option {:?} for command {:?}.",
-                    arg, command);
+                std::println(std::cerr,
+                    "❌ Unknow option {:?} for command {:?}.", arg, command);
                 print_help();
                 return 1;
             } else {
