@@ -63,13 +63,12 @@ auto main(int argc, char** argv) -> int {
      *
      * @param index The argument index
      */
-    const auto get_arg {
-        [&](int index) -> std::string {
-            if (index < 0 || index >= argc)
-                return {};
-            else return { *(argv + index) };
-        }
-    };
+    const auto get_arg {[&](int index) -> std::string {
+        if (index < 0 || index >= argc)
+            return {};
+        else
+            return {*(argv + index)};
+    }};
 
     const auto command { get_arg(1) };
     if (command.empty()
