@@ -3,6 +3,7 @@
 #include <print>
 
 #include "commands/diff.hxx"
+#include "commands/untracked.hxx"
 #include "commands/update.hxx"
 #include "utils/help.hxx"
 #include "version.hxx"
@@ -125,6 +126,7 @@ auto main(int argc, char** argv) -> int {
         check_enviroment();
 
         std::string source {};
+        bool remove {false};
 
         for (int i {2}; i < argc; i++) {
             const auto arg {get_arg(i)};
@@ -138,6 +140,12 @@ auto main(int argc, char** argv) -> int {
                     return 1;
                 } else
                     source = get_arg(++i);
+            } else if (arg == "--delete") {
+                if (remove) {
+                    std::println(std::cerr, "❌ Delete is already set.");
+                    return 1;
+                } else
+                    remove = true;
             } else {
                 std::println(std::cerr,
                     "❌ Unknow option {:?} for command {:?}.", arg, command);
@@ -146,8 +154,7 @@ auto main(int argc, char** argv) -> int {
             }
         }
 
-        // TODO: implement "untrackeed" command
-        // if (const auto ret {untracked(source)}; ret != 0) return ret;
+        if (const auto ret {untracked(source, remove)}; ret != 0) return ret;
     } else {
         std::println(std::cerr, "❌ Unknown command {:?}.", command);
     }
