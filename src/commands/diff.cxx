@@ -7,6 +7,7 @@
 #include "utils/file/filediff.hxx"
 #include "utils/file/filehash.hxx"
 
+namespace fs    = std::filesystem;
 using tokenizer = libtokenizer::tokenizer;
 
 auto diff(std::string_view source) -> int {
@@ -21,11 +22,11 @@ auto diff(std::string_view source) -> int {
         }
 
         archivePath = buffer;
-        if (!std::filesystem::exists(archivePath)) {
+        if (!fs::exists(archivePath)) {
             std::println(
                 std::cerr, "❌ Archive folder not found: {:?}", archivePath);
             return 1;
-        } else if (!std::filesystem::is_directory(archivePath)) {
+        } else if (!fs::is_directory(archivePath)) {
             std::println(
                 std::cerr, "❌ Archive is not a folder: {:?}", archivePath);
             return 1;
@@ -40,11 +41,11 @@ auto diff(std::string_view source) -> int {
             configFilepath = {buffer ? buffer : defaultConfigFilepath};
         }
 
-        if (!std::filesystem::exists(configFilepath)) {
+        if (!fs::exists(configFilepath)) {
             std::println(std::cerr,
                 "❌ Source configuration file not found: {:?}", configFilepath);
             return 1;
-        } else if (!std::filesystem::is_regular_file(configFilepath)) {
+        } else if (!fs::is_regular_file(configFilepath)) {
             std::println(
                 std::cerr, "❌ Source is not a file: {:?}", configFilepath);
             return 1;
@@ -52,21 +53,20 @@ auto diff(std::string_view source) -> int {
     }
 
     const auto file_handler {[&](std::string_view filepath) -> void {
-        const auto filename {
-            std::filesystem::path {filepath}.filename().string()};
+        const auto filename {fs::path {filepath}.filename().string()};
         const auto hash {filehash(filepath)};
         const auto hashFilepath {archivePath + "/" + hash};
 
         const auto filenameReport {
             std::format("{:20} [hash: {}]", filename, hash)};
 
-        if (!std::filesystem::exists(filepath))
+        if (!fs::exists(filepath))
             std::println(std::cout, ANSI_BOLD "❌ Deleted" ANSI_RESET " -> {}",
                 filename);
-        else if (!std::filesystem::is_regular_file(filepath)) {
+        else if (!fs::is_regular_file(filepath)) {
             std::println(std::cerr, "❌ Not a file: {:?}", filepath);
             return;
-        } else if (!std::filesystem::exists(hashFilepath))
+        } else if (!fs::exists(hashFilepath))
             std::println(std::cout, ANSI_BOLD "➕ Added  " ANSI_RESET " -> {}",
                 filenameReport);
         else if (filediff(filepath, hashFilepath))
