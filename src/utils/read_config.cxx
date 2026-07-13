@@ -6,6 +6,26 @@
 
 using tokenizer = libtokenizer::tokenizer;
 
+auto trim(std::string& str) -> void {
+    if (str.empty()) return;
+
+    size_t start {}, end {};
+
+    for (size_t i {}; i < str.size(); i++)
+        if (!std::isspace(str[i])) {
+            start = i;
+            break;
+        }
+
+    for (size_t i {str.size() - 1}; i > start; i--)
+        if (!std::isspace(str[i])) {
+            end = i;
+            break;
+        }
+
+    str = str.substr(start, end - start + 1);
+}
+
 auto read_config(std::string_view filepath) -> std::generator<std::string> {
     tokenizer t {filepath};
     tokenizer::token token {};
@@ -80,6 +100,7 @@ auto read_config(std::string_view filepath) -> std::generator<std::string> {
             }
         }
 
+        trim(buffer);
         if (!buffer.empty()) co_yield buffer;
     };
 }
