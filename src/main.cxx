@@ -19,7 +19,7 @@ auto print_version(void) noexcept -> void {
  * @brief Print the program help
  */
 auto print_help(void) noexcept -> void {
-    std::println(helpMessage);
+    std::cout << helpMessage << std::endl;
 }
 
 /**

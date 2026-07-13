@@ -2,7 +2,10 @@
 
 #include "globals.hxx"
 
-static constexpr auto helpMessage {
+/**
+ * @brief Represents the help message
+ */
+static const std::string helpMessage {
     ANSI_BOLD
     "NAME                                                                       \n"
     ANSI_RESET
