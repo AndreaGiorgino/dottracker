@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "filediff.hxx"
+#include "filehash.hxx"
 #include "libtokenizer/tokenizer.hxx"
 
 using tokenizer = libtokenizer::tokenizer;
@@ -48,10 +50,46 @@ auto diff(std::string_view source) -> int {
         }
     }
 
-    const auto file_handler {[&](std::string_view filepath) -> bool {
-        // TODO: make files diff
-        std::println(std::clog, "filepath: {:?}.", filepath);
-        return false;
+    const auto file_handler {[&](std::string_view filepath) -> void {
+        const auto filename {
+            std::filesystem::path {filepath}.filename().string()};
+        const auto hash {filehash(filepath)};
+        const auto hashFilepath {archivePath + "/" + hash};
+
+        const auto filenameReport {
+            std::format("{:20} [hash: {}]", filename, hash)};
+
+        if (!std::filesystem::exists(filepath))
+            std::println(std::cout,
+                "\033[1m"
+                "❌ Deleted"
+                "\033[0m"
+                " -> {}",
+                filename);
+        else if (!std::filesystem::is_regular_file(filepath)) {
+            std::println(std::cerr, "❌ Not a file: {:?}", filepath);
+            return;
+        } else if (!std::filesystem::exists(hashFilepath))
+            std::println(std::cout,
+                "\033[1m"
+                "➕ Added  "
+                "\033[0m"
+                " -> {}",
+                filenameReport);
+        else if (filediff(filepath, hashFilepath))
+            std::println(std::cout,
+                "\033[1m"
+                "✅ Ok     "
+                "\033[0m"
+                " -> {}",
+                filenameReport);
+        else
+            std::println(std::cout,
+                "\033[1m"
+                "🔃 Sync   "
+                "\033[0m"
+                " -> {}",
+                filenameReport);
     }};
 
     try {
