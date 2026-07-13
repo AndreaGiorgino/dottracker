@@ -21,12 +21,13 @@ static constexpr auto helpMessage {
     ANSI_BOLD
     "ENVIROMENT                                                                 \n"
     ANSI_RESET
-    "    DOTTRACKER_CONFIG                                                      \n"
-    "        Defaults to '$HOME/.config/dottracker/files.conf', represents the  \n"
-    "        location of the configuration file.                                \n"
-    "                                                                           \n"
     "    DOTTRACKER_ARCHIVE                                                     \n"
     "        Required, represents the location of the archived files.           \n"
+    "                                                                           \n"
+    "    DOTTRACKER_CONFIG                                                      \n"
+    "        Defaults to '$HOME/.config/dottracker/files.conf', represents the  \n"
+    "        location of the configuration file. See 'files.conf' for more      \n"
+    "        information about configuration options.                           \n"
     "                                                                           \n"
     ANSI_BOLD
     "OPTIONS                                                                    \n"
@@ -42,10 +43,10 @@ static constexpr auto helpMessage {
     ANSI_RESET
     "    diff [<-s | --source> <file_path>]                                     \n"
     "        Print a diff of the tracked files:                                 \n"
-    "            - OK: local and archive file are in sync.                      \n"
-    "            - A:  local file has been added                                \n"
-    "            - M:  local file has been modified                             \n"
-    "            - D:  local file has been deleted                              \n"
+    "            - Synced:  local and archive file are in sync.                 \n"
+    "            - Added:   local file has been added                           \n"
+    "            - Updated: local file has been modified                        \n"
+    "            - Deleted: local file has been deleted                         \n"
     "                                                                           \n"
     ANSI_BOLD
     "        Options:                                                           \n"
@@ -53,6 +54,20 @@ static constexpr auto helpMessage {
     "            -s, --source <file_path>                                       \n"
     "                If specified, use the file provided for the diff,          \n"
     "                otherwise DOTTRACKER_CONFIG is used.                       \n"
+    "                                                                           \n"
+    "    untracked [<-s | --source> <file_path>] [--delete]                     \n"
+    "        Print a list of the archived and not tracked files.                \n"
+    "                                                                           \n"
+    ANSI_BOLD
+    "        Options:                                                           \n"
+    ANSI_RESET
+    "            -s, --source <file_path>                                       \n"
+    "                If specified, use the file provided for the diff,          \n"
+    "                otherwise DOTTRACKER_CONFIG is used.                       \n"
+    "                                                                           \n"
+    "            --delete                                                       \n"
+    "                If specified, delete the untracked files from the          \n"
+    "                archive.                                                   \n"
     "                                                                           \n"
     "    update <target> [<-s | --source> <file_path>]                          \n"
     "        Update files in target:                                            \n"
