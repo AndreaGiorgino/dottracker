@@ -10,22 +10,10 @@ project(
 # Variables
 #
 
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_BUILD_TYPE Realease)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
-
-execute_process(
-    COMMAND bash -c "echo $HOME"
-    OUTPUT_VARIABLE USER_HOME
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-if (${USER_HOME} STREQUAL "")
-    message(FATAL_ERROR "Cannot get \$HOME enviroment variable")
-endif()
-
-set(CONFIG_DIR ${USER_HOME}/.config/dottracker)
 
 #
 # Dependencies
@@ -57,7 +45,7 @@ configure_file(
 
 file(
     GLOB_RECURSE SOURCE_FILES
-    CONFIGURE_DEPENDS src/*.cxx
+    CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx
 )
 
 add_executable(
@@ -88,7 +76,5 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
-    PRIVATE tokenizer
+    PUBLIC tokenizer
 )
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PostBuild.cmake)
