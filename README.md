@@ -45,8 +45,8 @@ dottracker [-v | --version] [-h | --help] <command> [<args>]
 
 ### Commands
 
-Name        | Description                                        | Arguments          | Options
-:---------- | :------------------------------------------------- | :----------------- | :-------
-`diff`      | Print a diff of the tracked files                  | -                  | `[<-s \| --source> <file_path>]`
-`untracked` | Print a list of the archived and not tracked files | -                  | `[<-s \| --source> <file_path>]`<br/>`[--delete]`
-`update`    | Update files in target                             | `local`, `archive` | `[<-s \| --source> <file_path>]`
+Name        | Description
+:---------- | :-----------
+`diff`      | Print a diff of the tracked files
+`untracked` | Print a list of the archived and not tracked files
+`update`    | Update files in target
