@@ -44,12 +44,12 @@ auto read_config(std::string_view filepath) -> std::generator<std::string> {
 
                 if (name.empty())
                     throw std::runtime_error(
-                        "❌ Cannot expand empty enviroment variable.");
+                        "Cannot expand empty enviroment variable.");
 
                 const auto expanded {getenv(name.c_str())};
                 if (expanded == NULL)
                     throw std::runtime_error(std::format(
-                        "❌ Cannot expand enviroment variable {:?}.", name));
+                        "Cannot expand enviroment variable {:?}.", name));
 
                 buffer += expanded;
 
