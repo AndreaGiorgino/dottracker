@@ -3,6 +3,7 @@
 #include <print>
 
 #include "commands/diff.hxx"
+#include "commands/update.hxx"
 #include "utils/help.hxx"
 #include "version.hxx"
 
@@ -36,28 +37,6 @@ auto check_enviroment(void) noexcept -> void {
             "some commands may not be available.");
 }
 
-auto update(std::string_view target, std::string_view source = {}) -> int {
-    // TODO: function "update" not implemented yet
-    std::println(std::clog,
-            "Executing command \"update\":\n"
-            "    target: {:?}\n"
-            "    source: {:?}",
-            target, source);
-
-    if (target.empty()) {
-        std::println(std::cerr,
-                "Missing target to update.");
-        return 1;
-    } else if (source.empty()) {
-        std::println(std::cerr,
-                "Missing source for updating.");
-        return 1;
-    }
-
-    std::println(std::cerr, "function \"update\" not implemented yet");
-    return 1;
-}
-
 auto main(int argc, char** argv) -> int {
     /**
      * @brief Get the argument at the given index, returns an empty string
@@ -83,13 +62,14 @@ auto main(int argc, char** argv) -> int {
         return 0;
     }
 
-    check_enviroment();
-
     if (command == "diff") {
+        check_enviroment();
+
         std::string source {};
 
         for (int i {2}; i < argc; i++) {
             const auto arg {get_arg(i)};
+
             if (arg.empty())
                 continue;
             else if (arg == "-s" || arg == "--source") {
@@ -109,11 +89,14 @@ auto main(int argc, char** argv) -> int {
 
         if (const auto ret {diff(source)}; ret != 0) return ret;
     } else if (command == "update") {
+        check_enviroment();
+
         std::string target {};
         std::string source {};
 
         for (int i {2}; i < argc; i++) {
             const auto arg {get_arg(i)};
+
             if (arg.empty())
                 continue;
             else if (arg == "-s" || arg == "--source") {
@@ -137,7 +120,34 @@ auto main(int argc, char** argv) -> int {
             }
         }
 
-        if (const auto ret {update(target, source)}; ret != 0) return ret;
+        if (const auto ret {update(source, target)}; ret != 0) return ret;
+    } else if (command == "untracked") {
+        check_enviroment();
+
+        std::string source {};
+
+        for (int i {2}; i < argc; i++) {
+            const auto arg {get_arg(i)};
+
+            if (arg.empty())
+                continue;
+            else if (arg == "-s" || arg == "--source") {
+                if (!source.empty()) {
+                    std::println(
+                        std::cerr, "❌ Source is already set to {:?}.", source);
+                    return 1;
+                } else
+                    source = get_arg(++i);
+            } else {
+                std::println(std::cerr,
+                    "❌ Unknow option {:?} for command {:?}.", arg, command);
+                print_help();
+                return 1;
+            }
+        }
+
+        // TODO: implement "untrackeed" command
+        // if (const auto ret {untracked(source)}; ret != 0) return ret;
     } else {
         std::println(std::cerr, "❌ Unknown command {:?}.", command);
     }
