@@ -2,4 +2,4 @@
 
 #include <string_view>
 
-auto update(std::string_view source) -> int;
+auto update(std::string_view source, std::string_view target) -> int;
