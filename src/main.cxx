@@ -18,11 +18,22 @@ auto print_help(void) noexcept -> void {
     std::println(helpMessage);
 }
 
-auto diff(void) -> int {
-    // TODO: function "diff" not implemented yet
-    std::println(std::cerr, "function \"diff\" not implemented yet");
-    return 1;
+/**
+ * @brief Check if the program enviroment variables are set
+ */
+auto check_enviroment(void) noexcept -> void {
+    if (!getenv("DOTTRACKER_CONFIG"))
+        std::println(std::clog,
+            "⚠️ Missing enviroment variable \"DOTTRACKER_CONFIG\", "
+            "defaulting to {:?}.",
+            defaultConfigFilepath.string());
+
+    if (!getenv("DOTTRACKER_ARCHIVE"))
+        std::println(std::clog,
+            "⚠️ Missing required enviroment variable \"DOTTRACKER_ARCHIVE\", "
+            "some commands may not be available.");
 }
+
 auto update(std::string_view target, std::string_view source = {}) -> int {
     // TODO: function "update" not implemented yet
     std::println(std::clog,
