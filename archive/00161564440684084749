@@ -1,0 +1,5 @@
+wallpaper {
+    monitor =
+    path = /usr/local/share/wallpapers/nowp-wallpaper.png
+    fit_mode = fit
+}

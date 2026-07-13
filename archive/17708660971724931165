@@ -1,0 +1,22 @@
+return { 
+    "danymat/neogen",
+    config = true,
+    lazy = true,
+    init = function()
+        local neogen = require("neogen")
+
+        vim.keymap.set("n", "<leader>nf", function()
+            neogen.generate({ type = 'func' })
+        end, {
+            noremap = true,
+            silent = true
+        })
+
+        vim.keymap.set("n", "<leader>nc", function()
+            neogen.generate({ type = 'class' })
+        end, {
+            noremap = true,
+            silent = true
+        })
+    end
+}

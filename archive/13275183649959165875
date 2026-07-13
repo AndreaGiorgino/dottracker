@@ -1,0 +1,36 @@
+enable_esc_key = true
+log_level = "warn"
+outputs   = "Active"
+
+[modules]
+center = [ "WindowTitle" ]
+left   = [ "Workspaces", [ "MediaPlayer" ] ]
+right  = [ "Clock", "SystemInfo", [ "Updates", "Settings" ] ]
+
+[clock]
+format = "%F %T"
+
+[updates]
+check_cmd = "pacman -Qu; yay -Qu"
+update_cmd = 'kitty -e zsh -c "sudo pacman -Syu; yay -Syu" &'
+
+[workspaces]
+enable_workspace_filling = true
+max_workspaces  = 10
+visibility_mode = "All"
+
+[appearance]
+danger_color  = "#fb4934"
+font_name     = "Fira Code"
+success_color = "#b8bb26"
+text_color    = "#ebdbb2"
+workspace_colors = [ "#ebdbb2" ]
+
+[appearance.background_color]
+base = "#282828"
+
+[appearance.primary_color]
+base = "#ebdbb2"
+
+[appearance.secondary_color]
+base = "#bdae93"

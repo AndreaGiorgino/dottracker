@@ -1,0 +1,75 @@
+--
+-- buffers
+--
+
+vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Writes to the current buffer." })
+vim.keymap.set("n", "<C-t>", ":terminal<cr>i", { desc = "Open a terminal window in the current buffer." })
+
+--
+-- tabs
+--
+
+vim.keymap.set("n", "T", "<cmd>tabnew<cr>", { desc = "Open a new tab." })
+vim.keymap.set("t", "<C-Tab>", "<C-\\><C-n>g<Tab>", { desc = "Switch to the previews tab." })
+
+--
+-- terminal
+--
+
+vim.keymap.set("t", "<C-Esc>", "<C-\\><C-n>", { desc = "Exit insert mode." })
+
+--
+-- insert mode autocomplete
+--
+
+vim.keymap.set("i", "<Tab>", function()
+    if vim.fn.pumvisible() == 1
+        then return "<C-n>"
+        else return "<Tab>"
+        end
+    end,
+    {
+        desc = "Jump to the next suggestion.",
+        expr = true
+    }
+)
+
+vim.keymap.set("i", "<S-Tab>", function()
+    if vim.fn.pumvisible() == 1
+        then return "<C-p>"
+        else return "<S-Tab>"
+        end
+    end,
+    {
+        desc = "Jump to the previews suggestion.",
+        expr = true
+    }
+)
+
+--
+-- netrw
+--
+
+local function toggle_netrw()
+  -- look for an existing netrw buffer in the current tab
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.bo[buf].filetype == "netrw" then
+      vim.api.nvim_win_close(win, true)
+      return
+    end
+  end
+
+  -- if not found, open netrw as a sidebar
+  vim.cmd(":Sexplore!")
+end
+
+vim.keymap.set("n", "<C-b>", toggle_netrw, { silent = true, desc = "Toggle netrw." })
+
+--
+-- other mappings
+--
+
+vim.keymap.set("n", "<leader>ss", ":%s/\\<<c-r><c-w>\\>/", { desc = "Substitue word in buffer." })
+vim.keymap.set("x", "<leader>so", ":sort<cr>", { desc = "Sort lines alphabetically." })
+vim.keymap.set("n", "L", vim.diagnostic.open_float, { desc = "Show diagnostics." })

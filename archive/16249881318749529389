@@ -1,0 +1,23 @@
+return {
+    'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    build = ':TSUpdate',
+    config = function()
+        local treesitter = require('nvim-treesitter')
+
+        treesitter.setup {
+            install_dir = vim.fn.stdpath('data') .. '/site',
+            highlight = {
+                enable = true
+            }
+        }
+
+        treesitter.install {
+            "c", "cpp",
+            "lua",
+            "bash",
+            "regex",
+            "html", "javascript", "typescript"
+        }
+    end
+}

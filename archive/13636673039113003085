@@ -1,0 +1,43 @@
+return {
+    "mason-org/mason-lspconfig.nvim",
+    opts = {},
+    dependencies = {
+        "neovim/nvim-lspconfig",
+        {
+            "mason-org/mason.nvim",
+            opts = {
+                ui = {
+                    icons = {
+                        package_installed = "✓",
+                        package_pending = "➜",
+                        package_uninstalled = "✗",
+                    },
+                },
+            },
+        },
+        {
+            "stevearc/conform.nvim",
+            event = { "BufWritePre" },
+            cmd = { "ConformInfo" },
+            keys = {
+                {
+                    "<leader>fo",
+                    function()
+                        require("conform").format({ async = true, lsp_format = "fallback" })
+                    end,
+                    mode = "",
+                    desc = "Format buffer",
+                },
+            },
+            opts = {
+                formatters_by_ft = {
+                    c = { "clang-format" },
+                    cpp = { "clang-format" },
+                    javascript = { "biome" },
+                    lua = { "stylua" },
+                    typescript = { "biome" },
+                },
+            },
+        },
+    },
+}
