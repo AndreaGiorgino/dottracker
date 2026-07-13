@@ -70,61 +70,74 @@ auto main(int argc, char** argv) -> int {
             return {*(argv + index)};
     }};
 
-    const auto command { get_arg(1) };
-    if (command.empty()
-            || command == "-h"
-            || command == "--help") {
+    const auto command {get_arg(1)};
+    if (command.empty() || command == "-h" || command == "--help") {
         // print the help message and exit
         print_help();
         return 0;
-    } else if (command == "-v"
-            || command == "--version") {
+    } else if (command == "-v" || command == "--version") {
         // print the version and exit
         print_version();
         return 0;
-    } else if (command == "diff") {
-        // TODO: handle options
-        if (const auto ret { diff() };
-                ret != 0)
-            return ret;
+    }
+
+    check_enviroment();
+
+    if (command == "diff") {
+        std::string source {};
+
+        for (int i {2}; i < argc; i++) {
+            const auto arg {get_arg(i)};
+            if (arg.empty())
+                continue;
+            else if (arg == "-s" || arg == "--source") {
+                if (!source.empty()) {
+                    std::println(
+                        std::cerr, "❌ Source is already set to {:?}.", source);
+                    return 1;
+                } else
+                    source = get_arg(++i);
+            } else {
+                std::println(std::cerr, "❌ Unknow option {:?} for command {:?}.",
+                    arg, command);
+                print_help();
+                return 1;
+            }
+        }
+
+        if (const auto ret {diff(source)}; ret != 0) return ret;
     } else if (command == "update") {
         std::string target {};
         std::string source {};
 
-        for (int i { 2 }; i < argc; i++) {
-            const auto arg { get_arg(i) };
+        for (int i {2}; i < argc; i++) {
+            const auto arg {get_arg(i)};
             if (arg.empty())
                 continue;
-            else if (arg == "-s"
-                    || arg == "--source") {
+            else if (arg == "-s" || arg == "--source") {
                 if (!source.empty()) {
-                    std::println(std::cerr,
-                            "Source already set to {:?}.",
-                            source);
+                    std::println(
+                        std::cerr, "❌ Source is already set to {:?}.", source);
                     return 1;
-                } else source = get_arg(++i);
+                } else
+                    source = get_arg(++i);
             } else if (*arg.begin() == '-') {
-                std::println(std::cerr,
-                        "Unknow option {:?} for command {:?}.",
-                        arg, command);
+                std::println(std::cerr, "❌ Unknow option {:?} for command {:?}.",
+                    arg, command);
                 print_help();
                 return 1;
             } else {
                 if (!target.empty()) {
-                    std::println(std::cerr,
-                            "Target is already set to {:?}.",
-                            target);
-                } else target = arg;
+                    std::println(
+                        std::cerr, "❌ Target is already set to {:?}.", target);
+                } else
+                    target = arg;
             }
         }
 
-        if (const auto ret { update(target, source) };
-                ret != 0)
-            return ret;
+        if (const auto ret {update(target, source)}; ret != 0) return ret;
     } else {
-        std::println(std::cerr,
-                "Unknown command {:?}.",
-                command);
+        std::println(std::cerr, "❌ Unknown command {:?}.", command);
     }
 
     return 0;
