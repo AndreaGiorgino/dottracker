@@ -1,6 +1,8 @@
+#include <filesystem>
 #include <iostream>
 #include <print>
 
+#include "commands/diff.hxx"
 #include "help.hxx"
 #include "version.hxx"
 
