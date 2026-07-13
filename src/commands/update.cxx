@@ -59,6 +59,9 @@ auto update(std::string_view source, std::string_view target) -> int {
         return 1;
     }
 
+    /**
+     * @brief Execute the command and report
+     */
     const auto file_handler {[&](std::string_view filepath) -> void {
         const auto filename {fs::path {filepath}.filename().string()};
         const auto hash {filehash(filepath)};

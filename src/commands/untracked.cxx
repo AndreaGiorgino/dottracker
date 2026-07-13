@@ -57,6 +57,9 @@ auto untracked(std::string_view source, bool remove) -> int {
     for (const auto& filepath : read_config(configFilepath))
         trackedFilespath.push_back(filehash(filepath));
 
+    /**
+     * @brief Execute the command and report
+     */
     const auto file_handler {[&](std::string_view hash) -> void {
         if (const auto it {std::find(
                 trackedFilespath.begin(), trackedFilespath.end(), hash)};
