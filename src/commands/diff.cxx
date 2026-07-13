@@ -7,30 +7,45 @@
 using tokenizer = libtokenizer::tokenizer;
 
 auto diff(std::string_view source) -> int {
-    std::string archiveFilepath {};
-    {
-        const auto envArchiveFilepath {getenv("DOTTRACKER_ARCHIVE")};
-        if (!envArchiveFilepath) {
+    std::string archivePath {};
+    { // archive folder initialisation
+        const auto buffer {getenv("DOTTRACKER_ARCHIVE")};
+        if (!buffer) {
             std::println(std::cerr,
                 "❌ Missing required enviroment variable "
                 "\"DOTTRACKER_ARCHIVE\".");
             return 1;
         }
 
-        archiveFilepath = envArchiveFilepath;
+        archivePath = buffer;
+        if (!std::filesystem::exists(archivePath)) {
+            std::println(
+                std::cerr, "❌ Archive folder not found: {:?}", archivePath);
+            return 1;
+        } else if (!std::filesystem::is_directory(archivePath)) {
+            std::println(
+                std::cerr, "❌ Archive is not a folder: {:?}", archivePath);
+            return 1;
+        }
     }
 
     std::string configFilepath {};
-    if (source.empty()) {
-        const auto envConfigFilepath {getenv("DOTTRACKER_CONFIG")};
-        configFilepath
-            = {envConfigFilepath ? envConfigFilepath : defaultConfigFilepath};
-    }
+    { // config file initialisation
+        if (source.empty()) {
+            // fallback to default config filepath
+            const auto buffer {getenv("DOTTRACKER_CONFIG")};
+            configFilepath = {buffer ? buffer : defaultConfigFilepath};
+        }
 
-    if (!std::filesystem::exists(configFilepath)) {
-        std::println(std::cerr, "❌ Source configuration file not found: {:?}",
-            configFilepath);
-        return 1;
+        if (!std::filesystem::exists(configFilepath)) {
+            std::println(std::cerr,
+                "❌ Source configuration file not found: {:?}", configFilepath);
+            return 1;
+        } else if (!std::filesystem::is_regular_file(configFilepath)) {
+            std::println(
+                std::cerr, "❌ Source is not a file: {:?}", configFilepath);
+            return 1;
+        }
     }
 
     const auto file_handler {[&](std::string_view filepath) -> bool {
