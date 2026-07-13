@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "globals.hxx"
-#include "utils/file/filediff.hxx"
+#include "utils/file/files_equals.hxx"
 #include "utils/file/filehash.hxx"
 #include "utils/read_config.hxx"
 
@@ -32,7 +32,7 @@ auto diff(std::string_view source) -> int {
         }
     }
 
-    std::string configFilepath {};
+    std::string configFilepath {source};
     { // config file initialisation
         if (source.empty()) {
             // fallback to default config filepath
@@ -57,7 +57,7 @@ auto diff(std::string_view source) -> int {
         const auto hashFilepath {archivePath + "/" + hash};
 
         const auto filenameReport {
-            std::format("{:20} [hash: {}]", filename, hash)};
+            std::format("{:20} (hash: {})", filename, hash)};
 
         if (!fs::exists(filepath))
             std::println(std::cout, ANSI_BOLD "❌ Deleted" ANSI_RESET " -> {}",
@@ -68,7 +68,7 @@ auto diff(std::string_view source) -> int {
         } else if (!fs::exists(hashFilepath))
             std::println(std::cout, ANSI_BOLD "➕ Added  " ANSI_RESET " -> {}",
                 filenameReport);
-        else if (filediff(filepath, hashFilepath))
+        else if (files_equals(filepath, hashFilepath))
             std::println(std::cout, ANSI_BOLD "✅ Synced " ANSI_RESET " -> {}",
                 filenameReport);
         else

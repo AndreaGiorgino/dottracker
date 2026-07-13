@@ -1,4 +1,4 @@
-#include "utils/file/filediff.hxx"
+#include "utils/file/files_equals.hxx"
 
 #include <filesystem>
 #include <format>
@@ -6,16 +6,16 @@
 
 namespace fs = std::filesystem;
 
-auto filediff(std::string_view filepath1, std::string_view filepath2) -> bool {
+auto files_equals(std::string_view filepath1, std::string_view filepath2) -> bool {
     if (!fs::exists(filepath1))
         throw std::runtime_error(std::format("File not found: {}", filepath1));
-    else if (fs::is_regular_file(filepath1))
+    else if (!fs::is_regular_file(filepath1))
         throw std::runtime_error(
             std::format("Not a regular file: {}", filepath1));
 
     if (!fs::exists(filepath2))
         throw std::runtime_error(std::format("File not found: {}", filepath2));
-    else if (fs::is_regular_file(filepath2))
+    else if (!fs::is_regular_file(filepath2))
         throw std::runtime_error(
             std::format("Not a regular file: {}", filepath2));
 
