@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "globals.hxx"
-#include "utils/file/files_equals.hxx"
 #include "utils/file/filehash.hxx"
+#include "utils/file/files_equals.hxx"
 #include "utils/read_config.hxx"
 
 namespace fs = std::filesystem;
@@ -97,8 +97,9 @@ auto update(std::string_view source, std::string_view target) -> int {
                     filenameReport);
             }
         } catch (const std::exception& ex) {
-            throw std::runtime_error(std::format(
-                "Cannot sync file: {} ({})", filenameReport, ex.what()));
+            std::println(std::cerr, "❌ Cannot sync file: {} ({})", filenameReport,
+                ex.what());
+            return;
         }
     }};
 
