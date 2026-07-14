@@ -1,36 +1,44 @@
-enable_esc_key = true
-log_level = "warn"
-outputs   = "Active"
-
 [modules]
-center = [ "WindowTitle" ]
-left   = [ "Workspaces", [ "MediaPlayer" ] ]
-right  = [ "Clock", "SystemInfo", [ "Updates", "Settings" ] ]
 
-[clock]
-format = "%F %T"
-
-[updates]
-check_cmd = "pacman -Qu; yay -Qu"
-update_cmd = 'kitty -e zsh -c "sudo pacman -Syu; yay -Syu" &'
+left   = [["Workspaces"], ["MediaPlayer"]]
+center = [["Tempo"], ["Notifications"]]
+right  = [["Updates"], ["SystemInfo", "Privacy"], ["Settings"]]
 
 [workspaces]
+
 enable_workspace_filling = true
 max_workspaces  = 10
 visibility_mode = "All"
 
+[tempo]
+
+weather_location = { City = "Turin" }
+
+[updates]
+
+check_cmd  = "pacman -Qu"
+update_cmd = 'kitty -e zsh -c "sudo pacman -Syu; yay -Syu" &'
+
 [appearance]
-danger_color  = "#fb4934"
-font_name     = "Fira Code"
+
+scale_factor = 1.05
+
+font_name = "Fira Code"
+
 success_color = "#b8bb26"
-text_color    = "#ebdbb2"
-workspace_colors = [ "#ebdbb2" ]
+warning_color = "#f9e2af"
+danger_color  = "#fabd2f"
+text_color    = "#e2dde4"
+
+workspace_colors = []
 
 [appearance.background_color]
-base = "#282828"
+base = "#1c1623"
+weak = "#3d314c"
+strong = "#4b3a5a"
 
 [appearance.primary_color]
-base = "#ebdbb2"
+base = "#e2dde4"
 
 [appearance.secondary_color]
-base = "#bdae93"
+base = "#2a2132"
