@@ -1,8 +1,8 @@
 [modules]
 
-left   = [["Workspaces"], ["MediaPlayer"]]
-center = [["Tempo"], ["Notifications"]]
-right  = [["Updates"], ["SystemInfo", "Privacy"], ["Settings"]]
+left   = [["Workspaces"]]
+center = [["Tempo", "Notifications"]]
+right  = [["Updates"], ["SystemInfo"], ["Settings"]]
 
 [workspaces]
 
@@ -17,7 +17,7 @@ weather_location = { City = "Turin" }
 [updates]
 
 check_cmd  = "pacman -Qu"
-update_cmd = 'kitty -e zsh -c "sudo pacman -Syu; yay -Syu" &'
+update_cmd = 'kitty -e zsh -c "sudo pacman -Syu" &'
 
 [appearance]
 
