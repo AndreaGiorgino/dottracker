@@ -37,7 +37,7 @@ monitor = eDP-1, disable
 # Set programs that you use
 $terminal = kitty
 $fileManager = dolphin
-$menu = hyprlauncher
+# $menu = hyprlauncher
 $web = firefox
 
 
@@ -52,8 +52,7 @@ $web = firefox
 # exec-once = nm-applet &
 # exec-once = waybar & hyprpaper & firefox
 
-exec-once = ashell
-exec-once = hyprpaper & hypridle
+exec-once = ashell & hyprpaper & hypridle
 
 
 #############################
@@ -110,7 +109,7 @@ general {
     # Please see https://wiki.hypr.land/Configuring/Tearing/ before you turn this on
     allow_tearing = false
 
-    layout = dwindle
+    layout = master
 }
 
 # https://wiki.hypr.land/Configuring/Variables/#decoration
@@ -203,7 +202,7 @@ animations {
 
 # See https://wiki.hypr.land/Configuring/Master-Layout/ for more
 master {
-    new_status = master
+    new_status = slave
 }
 
 # https://wiki.hypr.land/Configuring/Variables/#misc
