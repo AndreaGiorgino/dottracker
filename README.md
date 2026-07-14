@@ -1,6 +1,6 @@
 # dottracker
 
-**dottracker** is a tracking program for UNIX dotfiles and configurations.
+UNIX program for file tracking
 
 ## Build
 
