@@ -39,6 +39,11 @@ export BAT_THEME='gruvbox-dark'
 alias f='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
+# dottracker
+
+export DOTTRACKER_CONFIG="${HOME}/.config/dottracker/files.conf"
+export DOTTRACKER_ARCHIVE="${HOME}/.config/dottracker/archive"
+
 # git
 
 alias gits='nvim -c Neogit'
@@ -49,8 +54,3 @@ alias gitssh='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/git'
 # tree
 
 alias tree='tree -al --gitignore -I .git'
-
-# dottracker
-
-export DOTTRACKER_CONFIG="${HOME}/.config/dottracker/files.conf"
-export DOTTRACKER_ARCHIVE="${HOME}/.config/dottracker/archive"
