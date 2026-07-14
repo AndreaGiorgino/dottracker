@@ -92,7 +92,7 @@ auto update(std::string_view source, std::string_view target) -> int {
             if (!fs::exists(to)) {
                 fs::copy_file(from, to, fs::copy_options::overwrite_existing);
                 std::println(std::cout,
-                    ANSI_BOLD "➕ Added  " ANSI_RESET " -> {}", filenameReport);
+                    ANSI_BOLD "➕ Added   " ANSI_RESET " -> {}", filenameReport);
             } else if (!files_equals(from, to)) {
                 fs::copy_file(from, to, fs::copy_options::overwrite_existing);
                 std::println(std::cout,
