@@ -1,6 +1,6 @@
 # dottracker
 
-UNIX program for file tracking
+Program for file tracking in Cpp23
 
 ## Build
 
